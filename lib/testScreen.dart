@@ -10,10 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TestScreen extends StatefulWidget {
   final int? sessionId;
 
-  const TestScreen({
-    required this.sessionId,
-    Key? key,
-  }) : super(key: key);
+  const TestScreen({required this.sessionId, super.key});
 
   @override
   State<TestScreen> createState() => _TestScreenState();
@@ -47,10 +44,10 @@ class _TestScreenState extends State<TestScreen> {
         context,
         title: "Planning Mode",
         screenNumber: "planning_mode_dialog", // unique key for prefs
-        customContent: Column(
+        customContent: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               "Planning mode enables you to experiment and plan your future attendance by 'setting a future day as present day', you can experiment with your attendance.",
               style: TextStyle(fontSize: 15, color: Colors.white),
@@ -78,11 +75,13 @@ class _TestScreenState extends State<TestScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
+
           builder: (context) => AlertDialog(
             title: const Text("Day-based Mode Only"),
             content: const Text(
-                "Note! Test screen only works in day-based attendance mode. "
-                "To ensure stats don't change unexpectedly, please switch to day mode."),
+              "Note! Test screen only works in day-based attendance mode. "
+              "To ensure stats don't change unexpectedly, please switch to day mode.",
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -112,10 +111,9 @@ class _TestScreenState extends State<TestScreen> {
 
       if (session != null) {
         // Pull real Hive data
-        final hiveData = Hive.box<AttendanceData>("AttendanceBoxV3")
-            .values
-            .where((a) => a.sessionId == widget.sessionId)
-            .toList();
+        final hiveData = Hive.box<AttendanceData>(
+          "AttendanceBoxV3",
+        ).values.where((a) => a.sessionId == widget.sessionId).toList();
 
         // Save original for reset
         originalAttendance = hiveData
@@ -141,8 +139,9 @@ class _TestScreenState extends State<TestScreen> {
 
         // ✅ Default present day = today or sessionEnd (whichever is earlier)
         final today = DateTime.now();
-        presentDay =
-            today.isAfter(session!.sessionEnd) ? session!.sessionEnd : today;
+        presentDay = today.isAfter(session!.sessionEnd)
+            ? session!.sessionEnd
+            : today;
       } else {
         tempAttendance = [];
         originalAttendance = [];
@@ -233,23 +232,24 @@ class _TestScreenState extends State<TestScreen> {
       session!.activeDaysPerWeek,
     );
 
-// 2. Count present days
+    // 2. Count present days
     final presentCount = tempAttendance
         .where((a) => !a.date.isAfter(presentDay!) && a.isPresent == true)
         .length;
 
-// 3. Calculate absent days
+    // 3. Calculate absent days
     int absentCountRaw = plannedWorkingDays - presentCount;
 
-// 4. Apply adjustment
+    // 4. Apply adjustment
     final absentCount = (absentCountRaw - adjustment).clamp(0, absentCountRaw);
 
-// 5. Total marked days
+    // 5. Total marked days
     final totalMarked = presentCount + absentCount;
 
-// 6. Attendance percentage
-    final attendancePct =
-        totalMarked == 0 ? 0.0 : (presentCount / totalMarked) * 100.0;
+    // 6. Attendance percentage
+    final attendancePct = totalMarked == 0
+        ? 0.0
+        : (presentCount / totalMarked) * 100.0;
 
     return Scaffold(
       appBar: AppBar(

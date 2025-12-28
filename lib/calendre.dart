@@ -67,10 +67,7 @@ class _CalenderViewState extends State<CalenderView> {
       final myBox = Hive.box<SessionData>("SessionBoxV3");
       final session = myBox.get(widget.sessionID);
       if (session != null) {
-        yearData = createAcademicYear(
-          session.sessionStart,
-          session.sessionEnd,
-        );
+        yearData = createAcademicYear(session.sessionStart, session.sessionEnd);
 
         setState(() {
           isSelected = true;
@@ -79,21 +76,24 @@ class _CalenderViewState extends State<CalenderView> {
         // show dailog
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           if (isSelected) {
-            showCustomDialog(context,
-                title: "Calendar",
-                screenNumber: "screen_1",
-                customContent: Column(
-                  children: [
-                    Text(
-                        "A calendar is formed for your academic session.\nYou can mark 'Presents' by checking the boxes for each day. You can only see boxes till latest (present) day, future boxes are locked.\nMarking or un-marking weekends or days beyond 'Active Days per week' you have set while creating Session won't change anything in your stats.",
-                        style: TextStyle(color: Colors.white, fontSize: 12)),
-                    SizedBox(height: 8),
-                    Text(
-                      "Note: You can switch to class based attendance by clicking the app bar button.",
-                      style: TextStyle(color: Colors.green, fontSize: 12),
-                    )
-                  ],
-                ));
+            showCustomDialog(
+              context,
+              title: "Calendar",
+              screenNumber: "screen_1",
+              customContent: Column(
+                children: [
+                  Text(
+                    "A calendar is formed for your academic session.\nYou can mark 'Presents' by checking the boxes for each day. You can only see boxes till latest (present) day, future boxes are locked.\nMarking or un-marking weekends or days beyond 'Active Days per week' you have set while creating Session won't change anything in your stats.",
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "Note: You can switch to class based attendance by clicking the app bar button.",
+                    style: TextStyle(color: Colors.green, fontSize: 12),
+                  ),
+                ],
+              ),
+            );
           }
         });
 
@@ -143,10 +143,7 @@ class _CalenderViewState extends State<CalenderView> {
 
     if (yearData == null) {
       return const Center(
-        child: Text(
-          'No session found',
-          style: TextStyle(color: Colors.white),
-        ),
+        child: Text('No session found', style: TextStyle(color: Colors.white)),
       );
     }
 
@@ -173,18 +170,17 @@ class _CalenderViewState extends State<CalenderView> {
             final daysToShow = widget.showFuture
                 ? week.days
                 : week.days
-                    .where((day) =>
-                        day.date.isBefore(today) ||
-                        day.date.isAtSameMomentAs(today))
-                    .toList();
+                      .where(
+                        (day) =>
+                            day.date.isBefore(today) ||
+                            day.date.isAtSameMomentAs(today),
+                      )
+                      .toList();
 
             return Week(days: daysToShow);
           }).toList();
 
-          final filteredMonth = Month(
-            name: month.name,
-            weeks: weeksToShow,
-          );
+          final filteredMonth = Month(name: month.name, weeks: weeksToShow);
 
           return MonthSection(
             month: filteredMonth,

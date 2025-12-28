@@ -13,10 +13,10 @@ class StatisticsView extends StatefulWidget {
   final bool isClassBased;
 
   const StatisticsView({
-    Key? key,
+    super.key,
     required this.sessionId,
     required this.isClassBased,
-  }) : super(key: key);
+  });
 
   @override
   State<StatisticsView> createState() => _StatisticsViewState();
@@ -104,7 +104,7 @@ class _StatisticsViewState extends State<StatisticsView> {
 
   // Adjustment dialog
   Future<void> _showAdjustmentDialog() async {
-    final TextEditingController _daysController = TextEditingController();
+    final TextEditingController daysController = TextEditingController();
 
     final int? newAdjustment = await showDialog<int>(
       context: context,
@@ -125,7 +125,7 @@ class _StatisticsViewState extends State<StatisticsView> {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: _daysController,
+                controller: daysController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
@@ -138,7 +138,7 @@ class _StatisticsViewState extends State<StatisticsView> {
           actions: [
             ElevatedButton(
               onPressed: () {
-                final days = int.tryParse(_daysController.text) ?? 0;
+                final days = int.tryParse(daysController.text) ?? 0;
                 Navigator.pop(context, days); // return entered days
               },
               child: const Text("Save"),
@@ -192,8 +192,9 @@ class _StatisticsViewState extends State<StatisticsView> {
     return ValueListenableBuilder(
       valueListenable: Hive.box<AttendanceData>("AttendanceBoxV3").listenable(),
       builder: (context, Box<AttendanceData> atBox, _) {
-        final sessionAttendance =
-            atBox.values.where((a) => a.sessionId == widget.sessionId).toList();
+        final sessionAttendance = atBox.values
+            .where((a) => a.sessionId == widget.sessionId)
+            .toList();
 
         // -------- Day Based (synchronous) ----------
         final today = DateTime.now();
@@ -205,11 +206,14 @@ class _StatisticsViewState extends State<StatisticsView> {
         print("Present days: $presentDaysCount");
 
         int absentDaysCount = 0;
-        DateTime current = DateTime(session.sessionStart.year,
-            session.sessionStart.month, session.sessionStart.day);
+        DateTime current = DateTime(
+          session.sessionStart.year,
+          session.sessionStart.month,
+          session.sessionStart.day,
+        );
 
-        while (
-            !current.isAfter(today) && !current.isAfter(session.sessionEnd)) {
+        while (!current.isAfter(today) &&
+            !current.isAfter(session.sessionEnd)) {
           if (current.weekday <= session.activeDaysPerWeek) {
             final record = sessionAttendance.firstWhereOrNull(
               (a) =>
@@ -225,19 +229,22 @@ class _StatisticsViewState extends State<StatisticsView> {
           current = current.add(const Duration(days: 1));
         }
 
-        absentDaysCount =
-            (absentDaysCount - adjustment).clamp(0, absentDaysCount);
+        absentDaysCount = (absentDaysCount - adjustment).clamp(
+          0,
+          absentDaysCount,
+        );
 
         // -------- Class Based (async) ----------
         // total classes in plannedWorkingDays:
-        final int totalClasses =
-            (perDay != null) ? (plannedWorkingDays * perDay!) : 0;
+        final int totalClasses = (perDay != null)
+            ? (plannedWorkingDays * perDay!)
+            : 0;
 
         // If class-based, we need to fetch presentClasses asynchronously
         if (isClassBased) {
           return FutureBuilder<int>(
             future: IoFunctions.getTotalMarkedClasses(widget.sessionId!),
-            
+
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -290,7 +297,7 @@ class _StatisticsViewState extends State<StatisticsView> {
               final adjustedAbsent = (absentClassesRaw - adjustment * perDay!)
                   .clamp(0, absentClassesRaw);
 
-// total = present + adjusted absent
+              // total = present + adjusted absent
               final totalMarkedClasses = presentClasses + adjustedAbsent;
 
               final classAttendancePct = totalMarkedClasses == 0
@@ -304,33 +311,43 @@ class _StatisticsViewState extends State<StatisticsView> {
                   children: [
                     const SizedBox(height: 20),
                     _buildStatRow(
-                        "Total working days:", plannedWorkingDays.toString()),
-                    const SizedBox(height: 20),
-                    _buildStatRow("Total Classes/Lectures:",
-                        (perDay != null) ? "${totalClasses}" : "Not Set"),
+                      "Total working days:",
+                      plannedWorkingDays.toString(),
+                    ),
                     const SizedBox(height: 20),
                     _buildStatRow(
-                        "Present Classes:", presentClasses.toString()),
+                      "Total Classes/Lectures:",
+                      (perDay != null) ? "$totalClasses" : "Not Set",
+                    ),
+                    const SizedBox(height: 20),
+                    _buildStatRow(
+                      "Present Classes:",
+                      presentClasses.toString(),
+                    ),
                     const SizedBox(height: 20),
                     _buildStatRow("Absent Classes:", adjustedAbsent.toString()),
                     const SizedBox(height: 20),
                     _buildStatRow(
-                        "Target attendance:", "${session.targetAttendance}%"),
+                      "Target attendance:",
+                      "${session.targetAttendance}%",
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("Attendance percentage:",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        Text("${classAttendancePct.toStringAsFixed(1)}%",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color:
-                                  classAttendancePct < session.targetAttendance
-                                      ? Colors.red
-                                      : Colors.green,
-                            )),
+                        const Text(
+                          "Attendance percentage:",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        Text(
+                          "${classAttendancePct.toStringAsFixed(1)}%",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: classAttendancePct < session.targetAttendance
+                                ? Colors.red
+                                : Colors.green,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -347,8 +364,9 @@ class _StatisticsViewState extends State<StatisticsView> {
         } else {
           // Day-based UI (synchronous)
           final totalMarked = presentDaysCount + absentDaysCount;
-          final double attendancePct =
-              totalMarked == 0 ? 0.0 : (presentDaysCount / totalMarked) * 100.0;
+          final double attendancePct = totalMarked == 0
+              ? 0.0
+              : (presentDaysCount / totalMarked) * 100.0;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -356,34 +374,43 @@ class _StatisticsViewState extends State<StatisticsView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                _buildStatRow("Total working days/classes:",
-                    plannedWorkingDays.toString()),
+                _buildStatRow(
+                  "Total working days/classes:",
+                  plannedWorkingDays.toString(),
+                ),
                 const SizedBox(height: 20),
                 _buildStatRow(
-                    "Total Classes/Lectures:",
-                    perDay != null
-                        ? "${plannedWorkingDays * perDay!}"
-                        : "Not Set"),
+                  "Total Classes/Lectures:",
+                  perDay != null
+                      ? "${plannedWorkingDays * perDay!}"
+                      : "Not Set",
+                ),
                 const SizedBox(height: 20),
                 _buildStatRow("Present Days:", presentDaysCount.toString()),
                 const SizedBox(height: 20),
                 _buildStatRow("Absent Days:", absentDaysCount.toString()),
                 const SizedBox(height: 20),
                 _buildStatRow(
-                    "Target attendance:", "${session.targetAttendance}%"),
+                  "Target attendance:",
+                  "${session.targetAttendance}%",
+                ),
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Attendance percentage:",
-                        style: TextStyle(color: Colors.white, fontSize: 20)),
-                    Text("${attendancePct.toStringAsFixed(1)}%",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: attendancePct < session.targetAttendance
-                              ? Colors.red
-                              : Colors.green,
-                        )),
+                    const Text(
+                      "Attendance percentage:",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    Text(
+                      "${attendancePct.toStringAsFixed(1)}%",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: attendancePct < session.targetAttendance
+                            ? Colors.red
+                            : Colors.green,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -405,8 +432,10 @@ class _StatisticsViewState extends State<StatisticsView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: const TextStyle(color: Colors.white, fontSize: 20)),
-        Text(value,
-            style: const TextStyle(color: Color(0xffff0000), fontSize: 20)),
+        Text(
+          value,
+          style: const TextStyle(color: Color(0xffff0000), fontSize: 20),
+        ),
       ],
     );
   }
@@ -422,10 +451,10 @@ class StatisticsScreen extends StatelessWidget {
   final bool isClassBased;
 
   StatisticsScreen({
-    Key? key,
+    super.key,
     required this.isClassBased,
     required this.sessionId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

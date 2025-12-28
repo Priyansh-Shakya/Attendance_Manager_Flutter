@@ -6,7 +6,7 @@ import 'package:attendance_manager/testScreen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -60,7 +60,8 @@ class _MainScreenState extends State<MainScreen> {
       ),
       CalenderScreen(
         key: ValueKey(
-            sessionSelectedID), // PageStorageKey("Calendar_$sessionSelectedID"),
+          sessionSelectedID,
+        ), // PageStorageKey("Calendar_$sessionSelectedID"),
         sessionID: sessionSelectedID,
         showFuture: false,
         onClassBasedChanged: (value) {
@@ -71,22 +72,21 @@ class _MainScreenState extends State<MainScreen> {
       ),
       StatisticsScreen(
         key: ValueKey(
-            sessionSelectedID), // PageStorageKey("Statistics_$sessionSelectedID"),
+          sessionSelectedID,
+        ), // PageStorageKey("Statistics_$sessionSelectedID"),
         sessionId: sessionSelectedID,
         isClassBased: isClassBased,
       ),
       TestScreen(
         key: ValueKey(
-            sessionSelectedID), //PageStorageKey("Test_$sessionSelectedID"),
+          sessionSelectedID,
+        ), //PageStorageKey("Test_$sessionSelectedID"),
         sessionId: sessionSelectedID,
       ),
     ];
 
     return Scaffold(
-      body: PageStorage(
-        bucket: bucket,
-        child: screens[currentIndex],
-      ),
+      body: PageStorage(bucket: bucket, child: screens[currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xff141414),
         selectedItemColor: Colors.red,
@@ -100,9 +100,11 @@ class _MainScreenState extends State<MainScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month), label: "Calendar"),
+            icon: Icon(Icons.calendar_month),
+            label: "Calendar",
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "Stats"),
-          BottomNavigationBarItem(icon: Icon(Icons.analytics), label: "Test")
+          BottomNavigationBarItem(icon: Icon(Icons.analytics), label: "Test"),
         ],
       ),
     );

@@ -12,18 +12,15 @@ class NotificationService {
 
   // SetUp
   static Future<void> initAwesomeNoti() async {
-    await AwesomeNotifications().initialize(
-      null,
-      [
-        NotificationChannel(
-          channelKey: 'basic_channel',
-          channelName: 'Basic notifications',
-          channelDescription: 'Notification channel for basic tests',
-          defaultColor: Color(0xFF9D50DD),
-          ledColor: Colors.white,
-        ),
-      ],
-    );
+    await AwesomeNotifications().initialize(null, [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: const Color(0xFF9D50DD),
+        ledColor: Colors.white,
+      ),
+    ]);
   }
 
   //Create Notification
@@ -60,7 +57,10 @@ class NotificationService {
 
   // Show timePicker and save to pref
   static Future<TimeOfDay?> timePicker(
-      BuildContext context, TimeOfDay? oldTime, int sessionID) async {
+    BuildContext context,
+    TimeOfDay? oldTime,
+    int sessionID,
+  ) async {
     TimeOfDay? time = await showTimePicker(
       context: context,
       initialTime: oldTime ?? TimeOfDay.now(),

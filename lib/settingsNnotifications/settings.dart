@@ -5,7 +5,7 @@ import 'NotificationService.dart';
 
 class Settings extends StatefulWidget {
   final int? sessionId;
-  const Settings({Key? key, required this.sessionId}) : super(key: key);
+  const Settings({super.key, required this.sessionId});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -84,7 +84,10 @@ class _SettingsState extends State<Settings> {
         title: const Text(
           "Settings",
           style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: const Color(0xff1c1c1c),
         elevation: 0,
@@ -108,13 +111,17 @@ class _SettingsState extends State<Settings> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Enable Notifications",
-                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                    const Text(
+                      "Enable Notifications",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                     Switch(
                       value: isNoti,
                       onChanged: (bool newVal) {
@@ -123,14 +130,15 @@ class _SettingsState extends State<Settings> {
                         });
                         if (isNoti == false) {
                           NotificationService.cancelSessionNoti(
-                              widget.sessionId!);
+                            widget.sessionId!,
+                          );
                         }
                         addNotiToPref(widget.sessionId!, newVal);
                       },
-                      activeColor: Colors.green,
+                      activeThumbColor: Colors.green,
                       inactiveThumbColor: Colors.grey,
                       inactiveTrackColor: Colors.grey[700],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -150,14 +158,15 @@ class _SettingsState extends State<Settings> {
                   "You'll receive 2 different notifications:\n\n"
                   "1. A daily reminder to mark your attendance.\n"
                   "2. A warning if your attendance % falls below your target.",
-                  style:
-                      TextStyle(color: Colors.white, fontSize: 16, height: 1.4),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    height: 1.4,
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15),
 
             if (isNoti)
               // Input time
@@ -168,42 +177,51 @@ class _SettingsState extends State<Settings> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Row(children: [
-                    Expanded(
-                      child: Text(
-                        "Enter daily notification time:",
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          "Enter daily notification time:",
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    ElevatedButton(
+                      const SizedBox(width: 5),
+                      ElevatedButton(
                         onPressed: () async {
                           final picked = await NotificationService.timePicker(
-                              context, dailyTime, widget.sessionId!);
+                            context,
+                            dailyTime,
+                            widget.sessionId!,
+                          );
                           if (picked != null) {
                             setState(() {
                               dailyTime = picked;
                             });
                           }
                           NotificationService.createNotification(
-                              dailyTime!, weekDays, widget.sessionId!);
+                            dailyTime!,
+                            weekDays,
+                            widget.sessionId!,
+                          );
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff424242)),
+                          backgroundColor: const Color(0xff424242),
+                        ),
                         child: Text(
                           dailyTime != null
-                              ? MaterialLocalizations.of(context)
-                                  .formatTimeOfDay(
+                              ? MaterialLocalizations.of(
+                                  context,
+                                ).formatTimeOfDay(
                                   dailyTime!,
                                   alwaysUse24HourFormat:
                                       false, // 👈 ensures AM/PM format
                                 )
                               : "Time",
-                        )),
-                  ]),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],
@@ -212,4 +230,3 @@ class _SettingsState extends State<Settings> {
     );
   }
 }
-

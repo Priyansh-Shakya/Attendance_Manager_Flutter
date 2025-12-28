@@ -27,8 +27,8 @@ class WeekCard extends StatefulWidget {
     required this.planning,
     this.tempAttendance,
     this.onDayToggle,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<WeekCard> createState() => _WeekCardState();
@@ -42,7 +42,7 @@ class _WeekCardState extends State<WeekCard> {
     'Wednesday',
     'Thursday',
     'Friday',
-    'Saturday'
+    'Saturday',
   ];
 
   DateTime _todayTruncated() {
@@ -56,8 +56,9 @@ class _WeekCardState extends State<WeekCard> {
       a.year == b.year && a.month == b.month && a.day == b.day;
 
   bool _presentFromTemp(DateTime date) {
-    return widget.tempAttendance
-            ?.any((a) => _sameDate(a.date, date) && a.isPresent) ??
+    return widget.tempAttendance?.any(
+          (a) => _sameDate(a.date, date) && a.isPresent,
+        ) ??
         false;
   }
 
@@ -111,108 +112,120 @@ class _WeekCardState extends State<WeekCard> {
                     : matchedDay.isPresent;
 
                 return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                    child: Column(
-                      children: [
-                        // Check Box Row <--------
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              fullWeekdayNames[index],
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: (index == 0 || index == 6)
-                                    ? Colors.red
-                                    : Colors.white,
-                              ),
+                  padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  child: Column(
+                    children: [
+                      // Check Box Row <--------
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            fullWeekdayNames[index],
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: (index == 0 || index == 6)
+                                  ? Colors.red
+                                  : Colors.white,
                             ),
-                            Text(
-                              "${matchedDay.date.day.toString().padLeft(2, '0')}/${matchedDay.date.month.toString().padLeft(2, '0')}",
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.red),
-                            ),
-                            Checkbox(
-                              value: isChecked,
-                              checkColor: Colors.white,
-                              activeColor: const Color(0xff00ff4c),
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: const VisualDensity(
-                                  horizontal: -2, vertical: -2),
-                              onChanged: (!widget.showFuture && isFuture)
-                                  ? null
-                                  : (bool? value) {
-                                      final newValue = value ?? false;
-                                      if (session != null &&
-                                          session.activeDaysPerWeek == 5 &&
-                                          matchedDay.date.weekday ==
-                                              DateTime.saturday) {
-                                        Vibration.snackbar(); //vibrations
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                              backgroundColor: Colors.black,
-                                              content: Text(
-                                                "Saturday won't be counted in a 5-Days week!!",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 13),
-                                              )),
-                                        );
-                                        return;
-                                      }
-                                      if (matchedDay.date.weekday ==
-                                          DateTime.sunday) {
-                                        Vibration.snackbar();
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                              backgroundColor: Colors.black,
-                                              content: Text(
-                                                "Sunday won't be counted!!",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 16),
-                                              )),
-                                        );
-                                        return;
-                                      }
-                                      setState(() =>
-                                          matchedDay.isPresent = newValue);
-                                      if (widget.planningMode) {
-                                        Vibration.checkboxToggle();
-                                        widget.onDayToggle
-                                            ?.call(matchedDay.date, newValue);
-                                      } else {
-                                        Vibration.checkboxToggle();
-                                        IoFunctions.addAttendance(
-                                          AttendanceData(
-                                            sessionId: widget.sessionId,
-                                            date: matchedDay.date,
-                                            isPresent: newValue,
-                                          ),
-                                        );
-                                      }
-                                    },
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        if (isChecked &&
-                            widget.classBased &&
-                            widget.showFuture == false)
-                          DailyClassWidget(
-                            widget.sessionId,
-                            matchedDay.date,
-                            widget.planning,
                           ),
-                      ],
-                    ));
+                          Text(
+                            "${matchedDay.date.day.toString().padLeft(2, '0')}/${matchedDay.date.month.toString().padLeft(2, '0')}",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                            ),
+                          ),
+                          Checkbox(
+                            value: isChecked,
+                            checkColor: Colors.white,
+                            activeColor: const Color(0xff00ff4c),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            visualDensity: const VisualDensity(
+                              horizontal: -2,
+                              vertical: -2,
+                            ),
+                            onChanged: (!widget.showFuture && isFuture)
+                                ? null
+                                : (bool? value) {
+                                    final newValue = value ?? false;
+                                    if (session != null &&
+                                        session.activeDaysPerWeek == 5 &&
+                                        matchedDay.date.weekday ==
+                                            DateTime.saturday) {
+                                      Vibration.snackbar(); //vibrations
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          backgroundColor: Colors.black,
+                                          content: Text(
+                                            "Saturday won't be counted in a 5-Days week!!",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    if (matchedDay.date.weekday ==
+                                        DateTime.sunday) {
+                                      Vibration.snackbar();
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          backgroundColor: Colors.black,
+                                          content: Text(
+                                            "Sunday won't be counted!!",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    setState(
+                                      () => matchedDay.isPresent = newValue,
+                                    );
+                                    if (widget.planningMode) {
+                                      Vibration.checkboxToggle();
+                                      widget.onDayToggle?.call(
+                                        matchedDay.date,
+                                        newValue,
+                                      );
+                                    } else {
+                                      Vibration.checkboxToggle();
+                                      IoFunctions.addAttendance(
+                                        AttendanceData(
+                                          sessionId: widget.sessionId,
+                                          date: matchedDay.date,
+                                          isPresent: newValue,
+                                        ),
+                                      );
+                                    }
+                                  },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      if (isChecked &&
+                          widget.classBased &&
+                          widget.showFuture == false)
+                        DailyClassWidget(
+                          widget.sessionId,
+                          matchedDay.date,
+                          widget.planning,
+                        ),
+                    ],
+                  ),
+                );
               }),
             ),
           ],
@@ -243,8 +256,8 @@ class MonthSection extends StatelessWidget {
     this.tempAttendance,
     this.onDayToggle,
     required this.classBased,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -292,8 +305,8 @@ class DailyClassWidget extends StatefulWidget {
     this.sessionId,
     this.date,
     this.planningMode, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<DailyClassWidget> createState() => _DailyClassWidgetState();
@@ -321,7 +334,10 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
 
     // load from Hive if normal mode
     final pressed = await IoFunctions.loadPressedButtons(
-        widget.sessionId, widget.date, total);
+      widget.sessionId,
+      widget.date,
+      total,
+    );
     dayClasses = List.generate(total, (i) => pressed.contains(i));
 
     setState(() {
@@ -388,7 +404,11 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
 
                           for (int i = 0; i < totalClasses; i++) {
                             await IoFunctions.toggleClass(
-                                widget.sessionId, widget.date, i, totalClasses);
+                              widget.sessionId,
+                              widget.date,
+                              i,
+                              totalClasses,
+                            );
                           }
 
                           print("All deselected");
@@ -396,13 +416,18 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                           // Select all
                           setState(() {
                             classes = List.generate(totalClasses, (_) => true);
-                            pressedButtons =
-                                Set.from(List.generate(totalClasses, (i) => i));
+                            pressedButtons = Set.from(
+                              List.generate(totalClasses, (i) => i),
+                            );
                           });
 
                           for (int i = 0; i < totalClasses; i++) {
                             await IoFunctions.toggleClass(
-                                widget.sessionId, widget.date, i, totalClasses);
+                              widget.sessionId,
+                              widget.date,
+                              i,
+                              totalClasses,
+                            );
                           }
 
                           print("All selected");
@@ -423,7 +448,11 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
 
                         // persist into Hive
                         IoFunctions.toggleClass(
-                            widget.sessionId, widget.date, i, totalClasses);
+                          widget.sessionId,
+                          widget.date,
+                          i,
+                          totalClasses,
+                        );
 
                         print("Tapped");
                       },
@@ -433,7 +462,9 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 6),
+                          vertical: 6,
+                          horizontal: 6,
+                        ),
                         elevation: 1,
                         minimumSize: const Size(16, 32),
                       ),
@@ -442,8 +473,9 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                         child: Text(
                           "C${i + 1}",
                           style: TextStyle(
-                            color:
-                                isPressed ? Colors.green[400] : Colors.red[600],
+                            color: isPressed
+                                ? Colors.green[400]
+                                : Colors.red[600],
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),

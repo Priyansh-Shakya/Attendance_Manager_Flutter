@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class customCheckBox extends StatefulWidget {
-  const customCheckBox({Key? key}) : super(key: key);
+  const customCheckBox({super.key});
 
   @override
   State<customCheckBox> createState() => _customCheckBoxState();
@@ -13,13 +13,14 @@ class _customCheckBoxState extends State<customCheckBox> {
   @override
   Widget build(BuildContext context) {
     return Checkbox(
-        value: isChecked,
-        checkColor: Colors.white,
-        onChanged: (value) {
-          setState(() {
-            isChecked = value!;
-          });
+      value: isChecked,
+      checkColor: Colors.white,
+      onChanged: (value) {
+        setState(() {
+          isChecked = value!;
         });
+      },
+    );
   }
 }
 
@@ -59,7 +60,7 @@ String _monthName(int month) {
     'September',
     'October',
     'November',
-    'December'
+    'December',
   ];
   return monthNames[month - 1];
 }
@@ -94,10 +95,9 @@ AcademicYear createAcademicYear(DateTime start, DateTime end) {
     for (var day in daysInMonth) {
       currentWeek.add(day);
       if (currentWeek.length == 7) {
-        weeks.add(Week(
-            days: currentWeek
-                .whereType<AttendanceDay>()
-                .toList())); // remove nulls
+        weeks.add(
+          Week(days: currentWeek.whereType<AttendanceDay>().toList()),
+        ); // remove nulls
         currentWeek = [];
       }
     }
@@ -105,12 +105,13 @@ AcademicYear createAcademicYear(DateTime start, DateTime end) {
     // Last week padding
     if (currentWeek.isNotEmpty) {
       currentWeek.addAll(List.filled(7 - currentWeek.length, null));
-      weeks.add(Week(
-          days:
-              currentWeek.whereType<AttendanceDay>().toList())); // remove nulls
+      weeks.add(
+        Week(days: currentWeek.whereType<AttendanceDay>().toList()),
+      ); // remove nulls
     }
     print(
-        "Month key: $key → month name: ${_monthName(daysInMonth.first.date.month)}");
+      "Month key: $key → month name: ${_monthName(daysInMonth.first.date.month)}",
+    );
 
     String monthName =
         "${_monthName(daysInMonth.first.date.month)} ${daysInMonth.first.date.year}";
@@ -119,9 +120,6 @@ AcademicYear createAcademicYear(DateTime start, DateTime end) {
 
   return AcademicYear(months: months);
 }
-
-
-
 
 class Vibration {
   // Checkbox toggle , app bar iconButtons
