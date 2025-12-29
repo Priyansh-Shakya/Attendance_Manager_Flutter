@@ -5,7 +5,7 @@
     <application
         android:label="attendancemanager"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launhcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
