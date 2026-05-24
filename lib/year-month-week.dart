@@ -82,12 +82,13 @@ class _WeekCardState extends State<WeekCard> {
     final session = _getSession();
 
     return Card(
-      color: Colors.grey[850],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      color: const Color(0xFF111827),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       elevation: 4,
+      shadowColor: Colors.black54,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -123,8 +124,9 @@ class _WeekCardState extends State<WeekCard> {
                             fullWeekdayNames[index],
                             style: TextStyle(
                               fontSize: 16,
+                              fontWeight: FontWeight.w600,
                               color: (index == 0 || index == 6)
-                                  ? Colors.red
+                                  ? const Color(0xFFF06292)
                                   : Colors.white,
                             ),
                           ),
@@ -132,13 +134,19 @@ class _WeekCardState extends State<WeekCard> {
                             "${matchedDay.date.day.toString().padLeft(2, '0')}/${matchedDay.date.month.toString().padLeft(2, '0')}",
                             style: const TextStyle(
                               fontSize: 14,
-                              color: Colors.red,
+                              color: Color(0xFF4FC3F7),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           Checkbox(
                             value: isChecked,
                             checkColor: Colors.white,
-                            activeColor: const Color(0xff00ff4c),
+                            activeColor: const Color(0xFF4FC3F7),
+                            fillColor: WidgetStateProperty.resolveWith(
+                              (states) => states.contains(WidgetState.disabled)
+                                  ? Colors.white12
+                                  : const Color(0xFF4FC3F7),
+                            ),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             visualDensity: const VisualDensity(
@@ -367,11 +375,11 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
 
     return Card(
       elevation: 1,
-      color: Colors.grey[800],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.symmetric(vertical: 2),
+      color: const Color(0xFF111827),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         child: Scrollbar(
           thumbVisibility: true,
           trackVisibility: true,
@@ -385,10 +393,10 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                 final isPressed = pressedButtons.contains(i);
 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: SizedBox(
-                    height: 24,
-                    width: 45,
+                    height: 32,
+                    width: 50,
                     child: ElevatedButton(
                       onLongPress: () async {
                         Vibration.selectAll();
@@ -457,7 +465,7 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                         print("Tapped");
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                        backgroundColor: const Color(0xFF161B2A),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -465,7 +473,7 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                           vertical: 6,
                           horizontal: 6,
                         ),
-                        elevation: 1,
+                        elevation: 0,
                         minimumSize: const Size(16, 32),
                       ),
                       child: FittedBox(
@@ -474,8 +482,8 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                           "C${i + 1}",
                           style: TextStyle(
                             color: isPressed
-                                ? Colors.green[400]
-                                : Colors.red[600],
+                                ? const Color(0xFF80CBC4)
+                                : const Color(0xFFFF8A80),
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),

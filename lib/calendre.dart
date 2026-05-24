@@ -3,9 +3,9 @@ import 'package:attendance_manager/DataBase/model_class.dart';
 import 'package:attendance_manager/dailogBoxes.dart';
 import 'package:attendance_manager/utils.dart';
 import 'package:attendance_manager/year-month-week.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:collection/collection.dart';
 
 class CalenderView extends StatefulWidget {
   final String scrollId;
@@ -22,7 +22,7 @@ class CalenderView extends StatefulWidget {
   final bool planningC;
 
   const CalenderView({
-    Key? key,
+    super.key,
     required this.scrollId,
     required this.sessionID,
     required this.showFuture,
@@ -32,7 +32,7 @@ class CalenderView extends StatefulWidget {
     this.onDayToggle,
     this.classBasedToggle,
     required this.classBased,
-  }) : super(key: key);
+  });
 
   @override
   State<CalenderView> createState() => _CalenderViewState();
@@ -80,7 +80,7 @@ class _CalenderViewState extends State<CalenderView> {
               context,
               title: "Calendar",
               screenNumber: "screen_1",
-              customContent: Column(
+              customContent: const Column(
                 children: [
                   Text(
                     "A calendar is formed for your academic session.\nYou can mark 'Presents' by checking the boxes for each day. You can only see boxes till latest (present) day, future boxes are locked.\nMarking or un-marking weekends or days beyond 'Active Days per week' you have set while creating Session won't change anything in your stats.",
@@ -205,11 +205,11 @@ class CalenderScreen extends StatefulWidget {
   final ValueChanged<bool>? onClassBasedChanged;
 
   const CalenderScreen({
-    Key? key,
+    super.key,
     required this.sessionID,
     this.onClassBasedChanged,
     this.showFuture = false,
-  }) : super(key: key);
+  });
 
   @override
   State<CalenderScreen> createState() => _CalenderScreenState();
@@ -279,7 +279,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
             ),
           ),
         ],
-        backgroundColor: const Color(0xff141414),
+        backgroundColor: const Color(0xFF10131A),
         title: const Text(
           "Calender",
           style: TextStyle(
@@ -290,7 +290,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
         ),
         centerTitle: true,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF0B0D14),
       body: CalenderView(
         scrollId: "Calendre",
         sessionID: widget.sessionID,
@@ -298,8 +298,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
         planningMode: false,
         classBased: _isClassBased,
         planningC: false,
-
-        // 🔹 receive updates from child
         classBasedToggle: (value) {
           setState(() {
             _isClassBased = value;

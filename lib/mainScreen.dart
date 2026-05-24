@@ -88,10 +88,11 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: PageStorage(bucket: bucket, child: screens[currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xff141414),
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.white,
+        backgroundColor: const Color(0xFF10131A),
+        selectedItemColor: const Color(0xFFEF5350),
+        unselectedItemColor: Colors.white70,
         currentIndex: currentIndex,
+        elevation: 12,
         onTap: (index) {
           setState(() {
             currentIndex = index;

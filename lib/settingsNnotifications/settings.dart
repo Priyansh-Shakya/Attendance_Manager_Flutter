@@ -61,16 +61,17 @@ class _SettingsState extends State<Settings> {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Settings"),
-          backgroundColor: const Color(0xff1c1c1c),
+          backgroundColor: const Color(0xFF10131A),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context), // go back
+            onPressed: () => Navigator.pop(context),
           ),
         ),
+        backgroundColor: const Color(0xFF0B0D14),
         body: const Center(
           child: Text(
-            "No Session yet. Create new",
+            "No session yet. Create new",
             style: TextStyle(color: Colors.white, fontSize: 15),
           ),
         ),
@@ -78,7 +79,7 @@ class _SettingsState extends State<Settings> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xff141414),
+      backgroundColor: const Color(0xFF0B0D14),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
@@ -89,10 +90,10 @@ class _SettingsState extends State<Settings> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color(0xff1c1c1c),
+        backgroundColor: const Color(0xFF10131A),
         elevation: 0,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,27 +101,28 @@ class _SettingsState extends State<Settings> {
             const SizedBox(height: 15),
             const Text(
               "Notifications",
-              style: TextStyle(color: Colors.white, fontSize: 25),
+              style: TextStyle(color: Colors.white, fontSize: 26),
             ),
             const SizedBox(height: 10),
-
-            // 🔔 Notification Switch
             Container(
               decoration: BoxDecoration(
-                color: const Color(0xff2e2e2e),
-                borderRadius: BorderRadius.circular(16),
+                color: const Color(0xFF121825),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFF2C344A)),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
+                  vertical: 16,
+                  horizontal: 18,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Enable Notifications",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    const Expanded(
+                      child: Text(
+                        "Enable Notifications",
+                        style: TextStyle(color: Colors.white, fontSize: 17),
+                      ),
                     ),
                     Switch(
                       value: isNoti,
@@ -135,46 +137,44 @@ class _SettingsState extends State<Settings> {
                         }
                         addNotiToPref(widget.sessionId!, newVal);
                       },
-                      activeThumbColor: Colors.green,
-                      inactiveThumbColor: Colors.grey,
-                      inactiveTrackColor: Colors.grey[700],
+                      activeThumbColor: const Color(0xFF4FC3F7),
+                      inactiveThumbColor: Colors.white54,
+                      inactiveTrackColor: Colors.white12,
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
-
-            // 📄 Info Card
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: const Color(0xff1f1f1f),
-                borderRadius: BorderRadius.circular(16),
+                color: const Color(0xFF121825),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFF2C344A)),
               ),
               child: const Padding(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(18),
                 child: Text(
                   "You'll receive 2 different notifications:\n\n"
                   "1. A daily reminder to mark your attendance.\n"
                   "2. A warning if your attendance % falls below your target.",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    height: 1.4,
+                    color: Colors.white70,
+                    fontSize: 15,
+                    height: 1.5,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 15),
-
+            const SizedBox(height: 18),
             if (isNoti)
-              // Input time
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xff1f1f1f),
-                  borderRadius: BorderRadius.circular(16),
+                  color: const Color(0xFF121825),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: const Color(0xFF2C344A)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -182,11 +182,11 @@ class _SettingsState extends State<Settings> {
                     children: [
                       const Expanded(
                         child: Text(
-                          "Enter daily notification time:",
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                          "Daily notification time",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
                         ),
                       ),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: 6),
                       ElevatedButton(
                         onPressed: () async {
                           final picked = await NotificationService.timePicker(
@@ -199,14 +199,20 @@ class _SettingsState extends State<Settings> {
                               dailyTime = picked;
                             });
                           }
-                          NotificationService.createNotification(
-                            dailyTime!,
-                            weekDays,
-                            widget.sessionId!,
-                          );
+                          if (dailyTime != null) {
+                            NotificationService.createNotification(
+                              dailyTime!,
+                              weekDays,
+                              widget.sessionId!,
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff424242),
+                          backgroundColor: const Color(0xFF4FC3F7),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
                         ),
                         child: Text(
                           dailyTime != null
@@ -214,10 +220,10 @@ class _SettingsState extends State<Settings> {
                                   context,
                                 ).formatTimeOfDay(
                                   dailyTime!,
-                                  alwaysUse24HourFormat:
-                                      false, // 👈 ensures AM/PM format
+                                  alwaysUse24HourFormat: false,
                                 )
-                              : "Time",
+                              : "Set Time",
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ),
                     ],

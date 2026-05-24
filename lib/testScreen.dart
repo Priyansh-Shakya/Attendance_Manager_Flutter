@@ -253,7 +253,7 @@ class _TestScreenState extends State<TestScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff242424),
+        backgroundColor: const Color(0xFF10131A),
         title: const Text(
           "Planning",
           style: TextStyle(
@@ -274,109 +274,121 @@ class _TestScreenState extends State<TestScreen> {
           ),
         ],
       ),
-      backgroundColor: const Color(0xff000000),
-      body: Stack(
+      backgroundColor: const Color(0xFF0B0D14),
+      body: Column(
         children: [
-          // Full page content
-          Column(
-            children: [
-              // Stats section
-              Container(
-                color: Colors.black,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Text(
-                      "Present Day: ${presentDay!.day}/${presentDay!.month}/${presentDay!.year}",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      "Total Working Days (Till Present Day): $plannedWorkingDays",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      "Present: $presentCount",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      "Absent: $absentCount",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      "Attendance: ${attendancePct.toStringAsFixed(1)}%",
-                      style: TextStyle(
-                        color: attendancePct < session!.targetAttendance
-                            ? Colors.red
-                            : Colors.green,
-                      ),
-                    ),
-                  ],
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFF111826),
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFF263046)),
               ),
-              const Divider(color: Colors.white24, height: 1),
-
-              // Calendar takes all available height
-              Expanded(
-                child: CalenderView(
-                  classBased: false,
-                  planningC: true,
-                  scrollId: "Calendre",
-                  key: ValueKey(tempAttendance.hashCode),
-                  sessionID: widget.sessionId,
-                  showFuture: true,
-                  planningMode: true,
-                  tempAttendance: tempAttendance,
-                  onDayToggle: toggleDay,
-                ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Present Day: ${presentDay!.day}/${presentDay!.month}/${presentDay!.year}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildMetricRow(
+                    "Working days",
+                    plannedWorkingDays.toString(),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildMetricRow(
+                    "Present days",
+                    presentCount.toString(),
+                    color: Colors.greenAccent,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildMetricRow(
+                    "Absent days",
+                    absentCount.toString(),
+                    color: Colors.redAccent,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildMetricRow(
+                    "Attendance",
+                    "${attendancePct.toStringAsFixed(1)}%",
+                    color: attendancePct < session!.targetAttendance
+                        ? Colors.redAccent
+                        : Colors.greenAccent,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-
-          // Floating button overlay
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    Vibration.buttonPress();
-                    print("Absent raw:$absentCountRaw");
-                    print("absent with adjustment $absentCount");
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: presentDay!,
-                      firstDate: session!.sessionStart,
-                      lastDate: session!.sessionEnd,
-                    );
-
-                    if (picked != null) {
-                      setState(() {
-                        presentDay = picked;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.check, color: Colors.black, size: 18),
-                  label: const Text(
-                    "Set Present Day",
-                    style: TextStyle(color: Colors.black, fontSize: 14),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 14,
-                    ),
-                    shape: const StadiumBorder(),
-                    elevation: 3,
-                  ),
-                ),
-              ),
+          Expanded(
+            child: CalenderView(
+              classBased: false,
+              planningC: true,
+              scrollId: "Calendre",
+              key: ValueKey(tempAttendance.hashCode),
+              sessionID: widget.sessionId,
+              showFuture: true,
+              planningMode: true,
+              tempAttendance: tempAttendance,
+              onDayToggle: toggleDay,
             ),
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: const Color(0xFFEF5350),
+        label: const Text(
+          "Set Present Day",
+          style: TextStyle(color: Colors.white),
+        ),
+        icon: const Icon(Icons.check, color: Colors.white),
+        onPressed: () async {
+          Vibration.buttonPress();
+          final picked = await showDatePicker(
+            context: context,
+            initialDate: presentDay!,
+            firstDate: session!.sessionStart,
+            lastDate: session!.sessionEnd,
+          );
+
+          if (picked != null) {
+            setState(() {
+              presentDay = picked;
+            });
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildMetricRow(
+    String label,
+    String value, {
+    Color color = Colors.white,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 15),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            color: color,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

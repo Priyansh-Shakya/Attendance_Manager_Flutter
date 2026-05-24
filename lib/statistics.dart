@@ -332,23 +332,10 @@ class _StatisticsViewState extends State<StatisticsView> {
                       "${session.targetAttendance}%",
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Attendance percentage:",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        Text(
-                          "${classAttendancePct.toStringAsFixed(1)}%",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: classAttendancePct < session.targetAttendance
-                                ? Colors.red
-                                : Colors.green,
-                          ),
-                        ),
-                      ],
+                    _buildPercentageRow(
+                      "Attendance percentage:",
+                      classAttendancePct.toDouble(),
+                      session.targetAttendance,
                     ),
                     const SizedBox(height: 20),
                     const Text(
@@ -395,23 +382,10 @@ class _StatisticsViewState extends State<StatisticsView> {
                   "${session.targetAttendance}%",
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Attendance percentage:",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                    Text(
-                      "${attendancePct.toStringAsFixed(1)}%",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: attendancePct < session.targetAttendance
-                            ? Colors.red
-                            : Colors.green,
-                      ),
-                    ),
-                  ],
+                _buildPercentageRow(
+                  "Attendance percentage:",
+                  attendancePct,
+                  session.targetAttendance,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -428,15 +402,86 @@ class _StatisticsViewState extends State<StatisticsView> {
   }
 
   Widget _buildStatRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: const TextStyle(color: Colors.white, fontSize: 20)),
-        Text(
-          value,
-          style: const TextStyle(color: Color(0xffff0000), fontSize: 20),
-        ),
-      ],
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111826),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF22303F)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Color(0xFFEF5350),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPercentageRow(String label, double value, double target) {
+    final percentText = "${value.toStringAsFixed(1)}%";
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111826),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF22303F)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                percentText,
+                style: TextStyle(
+                  color: value < target ? Colors.redAccent : Colors.greenAccent,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: LinearProgressIndicator(
+              value: (value / 100).clamp(0, 1),
+              minHeight: 8,
+              backgroundColor: Colors.white10,
+              color: value < target ? Colors.redAccent : Colors.greenAccent,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -460,7 +505,7 @@ class StatisticsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff141414),
+        backgroundColor: const Color(0xFF10131A),
         actions: [
           IconButton(
             icon: const Icon(Icons.schedule_rounded),
@@ -478,11 +523,10 @@ class StatisticsScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF0B0D14),
       body: StatisticsView(
-        key: _viewKey, // 👈 attach the key
+        key: _viewKey,
         sessionId: sessionId,
         isClassBased: isClassBased,
       ),
