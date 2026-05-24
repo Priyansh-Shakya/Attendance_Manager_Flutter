@@ -140,12 +140,32 @@ class _WeekCardState extends State<WeekCard> {
                           ),
                           Checkbox(
                             value: isChecked,
-                            checkColor: Colors.white,
-                            activeColor: const Color(0xFF4FC3F7),
+                            checkColor: const Color(0xFF1DE9B6),
+                            activeColor: const Color(0xFF1DE9B6),
                             fillColor: WidgetStateProperty.resolveWith(
-                              (states) => states.contains(WidgetState.disabled)
-                                  ? Colors.white12
-                                  : const Color(0xFF4FC3F7),
+                              (states) {
+                                if (states.contains(WidgetState.disabled)) {
+                                  return Colors.white10;
+                                }
+                                if (states.contains(WidgetState.selected)) {
+                                  return const Color(0xFF1DE9B6);
+                                }
+                                return const Color(0xFF1A2332);
+                              },
+                            ),
+                            side: WidgetStateBorderSide.resolveWith(
+                              (states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return const BorderSide(
+                                    color: Color(0xFF1DE9B6),
+                                    width: 2,
+                                  );
+                                }
+                                return const BorderSide(
+                                  color: Color(0xFF324558),
+                                  width: 1.5,
+                                );
+                              },
                             ),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,

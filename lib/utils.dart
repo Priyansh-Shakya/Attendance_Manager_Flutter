@@ -14,9 +14,10 @@ class _customCheckBoxState extends State<customCheckBox> {
   Widget build(BuildContext context) {
     return Checkbox(
       value: isChecked,
-      checkColor: Colors.white,
+      checkColor: Colors.greenAccent,
       onChanged: (value) {
         setState(() {
+          debugPrint("Checked checkbox");
           isChecked = value!;
         });
       },

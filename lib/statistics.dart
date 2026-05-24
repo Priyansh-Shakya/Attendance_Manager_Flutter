@@ -1,12 +1,11 @@
 import 'package:attendance_manager/DataBase/IoFunctions.dart';
 import 'package:attendance_manager/DataBase/model_class.dart';
 import 'package:attendance_manager/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:collection/collection.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StatisticsView extends StatefulWidget {
   final int? sessionId;
@@ -304,16 +303,18 @@ class _StatisticsViewState extends State<StatisticsView> {
                   ? 0
                   : (presentClasses / totalMarkedClasses) * 100;
 
+              // total working ... string with condition
+              final totalWorking = isClassBased
+                  ? "Total working classes:"
+                  : "Total working days:";
+
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    _buildStatRow(
-                      "Total working days:",
-                      plannedWorkingDays.toString(),
-                    ),
+                    _buildStatRow(totalWorking, plannedWorkingDays.toString()),
                     const SizedBox(height: 20),
                     _buildStatRow(
                       "Total Classes/Lectures:",
@@ -362,7 +363,7 @@ class _StatisticsViewState extends State<StatisticsView> {
               children: [
                 const SizedBox(height: 20),
                 _buildStatRow(
-                  "Total working days/classes:",
+                  "Total working days:",
                   plannedWorkingDays.toString(),
                 ),
                 const SizedBox(height: 20),
