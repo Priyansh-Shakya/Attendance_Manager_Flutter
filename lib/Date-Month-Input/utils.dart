@@ -10,14 +10,14 @@ class RangeInput extends StatefulWidget {
   final void Function(DateTime)? onEnd;
 
   const RangeInput({
-    Key? key,
+    super.key,
     required this.label,
     this.useMonthPicker = false,
     this.onEnd,
     this.onStart,
     this.initialStart,
     this.initialEnd,
-  }) : super(key: key);
+  });
 
   @override
   State<RangeInput> createState() => _RangeInputState();
@@ -37,83 +37,83 @@ class _RangeInputState extends State<RangeInput> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Text(
-            widget.label,
-            style: const TextStyle(color: Colors.black, fontSize: 25),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  const Color(0xffe4eef6), // your desired background color
-              foregroundColor:
-                  Colors.black, // text color - you had black text, keep it
-            ),
-            onPressed: () async {
-              final picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-              if (picked != null) {
-                setState(() {
-                  start = picked;
-                });
-                if (widget.onStart != null) {
-                  widget.onStart?.call(picked);
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Text(widget.label, style: const TextStyle(fontSize: 25)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(
+                  0xffe4eef6,
+                ), // your desired background color
+                foregroundColor:
+                    Colors.black, // text color - you had black text, keep it
+              ),
+              onPressed: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (picked != null) {
+                  setState(() {
+                    start = picked;
+                  });
+                  if (widget.onStart != null) {
+                    widget.onStart?.call(picked);
+                  }
                 }
-              }
-            },
-            child: Text(
-              start == null
-                  ? "Starting  ${widget.useMonthPicker ? "Month" : "Date"}"
-                  : widget.useMonthPicker
-                      ? _formatMonth(start!)
-                      : _formatDate(start!),
-              style: const TextStyle(color: Colors.black),
+              },
+              child: Text(
+                start == null
+                    ? "Starting  ${widget.useMonthPicker ? "Month" : "Date"}"
+                    : widget.useMonthPicker
+                    ? _formatMonth(start!)
+                    : _formatDate(start!),
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  const Color(0xffe4eef6), // your desired background color
-              foregroundColor:
-                  Colors.black, // text color - you had black text, keep it
-            ),
-            onPressed: () async {
-              final picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-              if (picked != null) {
-                setState(() {
-                  end = picked;
-                });
-                if (widget.onEnd != null) {
-                  widget.onEnd?.call(picked);
+            const SizedBox(height: 15),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(
+                  0xffe4eef6,
+                ), // your desired background color
+                foregroundColor:
+                    Colors.black, // text color - you had black text, keep it
+              ),
+              onPressed: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (picked != null) {
+                  setState(() {
+                    end = picked;
+                  });
+                  if (widget.onEnd != null) {
+                    widget.onEnd?.call(picked);
+                  }
                 }
-              }
-            },
-            child: Text(
-              end == null
-                  ? "Ending  ${widget.useMonthPicker ? "Month" : "Date"}"
-                  : widget.useMonthPicker
-                      ? _formatMonth(end!)
-                      : _formatDate(end!),
-              style: const TextStyle(color: Colors.black),
+              },
+              child: Text(
+                end == null
+                    ? "Ending  ${widget.useMonthPicker ? "Month" : "Date"}"
+                    : widget.useMonthPicker
+                    ? _formatMonth(end!)
+                    : _formatDate(end!),
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   String _formatMonth(DateTime date) {
@@ -133,7 +133,7 @@ class _RangeInputState extends State<RangeInput> {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     return monthNames[month - 1];
   }
@@ -144,4 +144,3 @@ String _formatDate(DateTime date) {
       "${date.month.toString().padLeft(2, '0')}/"
       "${date.year}";
 }
-

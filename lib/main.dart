@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:attendance_manager/DataBase/IoFunctions.dart';
 import 'package:attendance_manager/mainScreen.dart';
 import 'package:attendance_manager/settingsNnotifications/NotificationService.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // root zone

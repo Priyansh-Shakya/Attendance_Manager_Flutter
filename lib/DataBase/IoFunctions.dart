@@ -1,4 +1,5 @@
 import 'package:attendance_manager/DataBase/model_class.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,19 +13,19 @@ class IoFunctions {
 
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(AttendanceDataAdapter());
-      print("Registered attendance adapter");
+      debugPrint("Registered attendance adapter");
     }
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(SessionDataAdapter());
-      print("Registered session adapter");
+      debugPrint("Registered session adapter");
     }
 
     await Hive.openBox<SessionData>(sesBoxName);
-    print("Box Opened: $sesBoxName");
+    debugPrint("Box Opened: $sesBoxName");
     await Hive.openBox<AttendanceData>(atBoxName);
-    print("Box Opened: $atBoxName");
+    debugPrint("Box Opened: $atBoxName");
 
-    print("Box initialized");
+    debugPrint("Box initialized");
   }
 
   // ------------------ Session Methods ------------------
@@ -57,41 +58,50 @@ class IoFunctions {
     await IoFunctions.classesPerDay(newSessionId, perDay);
 
     // Clear attendance for new session (safety)
-    final existing =
-        attendanceBox.values.where((a) => a.sessionId == newSessionId).toList();
+    final existing = attendanceBox.values
+        .where((a) => a.sessionId == newSessionId)
+        .toList();
 
     if (existing.isNotEmpty) {
-      print(
-          "Deleting ${existing.length} existing attendance records for session $newSessionId");
+      debugPrint(
+        "Deleting ${existing.length} existing attendance records for session $newSessionId",
+      );
     }
 
     for (final a in existing) {
-      print("Deleting record for ${a.date} → isPresent: ${a.isPresent}");
+      debugPrint("Deleting record for ${a.date} → isPresent: ${a.isPresent}");
       await a.delete();
     }
 
-    print("Session saved: $data");
+    debugPrint("Session saved: $data");
     final sessions = IoFunctions.getAllSessions();
-    print("Sessions at HomeScreen:");
+    debugPrint("Sessions at HomeScreen:");
     for (var s in sessions) {
-      print(
-          "Session: ${s.sessionStart} to ${s.sessionEnd}, Active days: ${s.activeDaysPerWeek}");
+      debugPrint(
+        "Session: ${s.sessionStart} to ${s.sessionEnd}, Active days: ${s.activeDaysPerWeek}",
+      );
     }
 
     //--------Setting adjustment to 0------------
     final pref = await SharedPreferences.getInstance();
-    await pref.setInt("adjustment_${newSessionId}", 0);
+    await pref.setInt("adjustment_$newSessionId", 0);
 
-    final saved = pref.getInt("adjustment_${newSessionId}");
-    print("Adjustment for session - ${newSessionId} = $saved");
+    final saved = pref.getInt("adjustment_$newSessionId");
+    debugPrint("Adjustment for session - $newSessionId = $saved");
 
     //--------Setting class based to false------------
     await pref.setBool('toggleToClassBased_$newSessionId', false);
   }
 
   //Update session
-  static Future<void> updateSession(int? sessionId, DateTime newstart,
-      DateTime newend, int newdays, double newtarget, String newName) async {
+  static Future<void> updateSession(
+    int? sessionId,
+    DateTime newstart,
+    DateTime newend,
+    int newdays,
+    double newtarget,
+    String newName,
+  ) async {
     final myBox = Hive.box<SessionData>(sesBoxName);
     final session = myBox.get(sessionId);
     if (session != null) {
@@ -129,11 +139,13 @@ class IoFunctions {
     await sessionBox.deleteAt(index);
     final prefs = await SharedPreferences.getInstance();
     final selected = prefs.getInt('selectedSessionId');
-    print("Deleting index: $index, Hive key: $key, Prefs selected: $selected");
+    debugPrint(
+      "Deleting index: $index, Hive key: $key, Prefs selected: $selected",
+    );
 
     if (selected == key) {
       await prefs.remove('selectedSessionId');
-      print("Removed");
+      debugPrint("Removed");
     }
   }
 
@@ -157,7 +169,7 @@ class IoFunctions {
     }
 
     await attendanceBox.add(data);
-    print("Attendance saved for session ${data.sessionId}: ${data.date}");
+    debugPrint("Attendance saved for session ${data.sessionId}: ${data.date}");
   }
 
   /// Get all attendance
@@ -185,7 +197,11 @@ class IoFunctions {
   }
 
   static void updateTempAttendanceClass(
-      int sessionId, DateTime date, int classIndex, bool value) {
+    int sessionId,
+    DateTime date,
+    int classIndex,
+    bool value,
+  ) {
     final key = "$sessionId-${date.toIso8601String()}";
     if (!_tempAttendanceMap.containsKey(key)) {
       _tempAttendanceMap[key] = AttendanceData(
@@ -202,8 +218,9 @@ class IoFunctions {
       // final oldLength = dayData.classesPresent?.length ?? 0;
       dayData.classesPresent ??= List.filled(classIndex + 1, false);
       if (dayData.classesPresent!.length < classIndex + 1) {
-        dayData.classesPresent!.addAll(List.filled(
-            classIndex + 1 - dayData.classesPresent!.length, false));
+        dayData.classesPresent!.addAll(
+          List.filled(classIndex + 1 - dayData.classesPresent!.length, false),
+        );
       }
     }
 
@@ -259,8 +276,9 @@ class IoFunctions {
       await attendanceBox.add(record);
     }
 
-    print(
-        "Saved class $classIndex for ${record.date} in session $sessionId → ${record.classesPresent}");
+    debugPrint(
+      "Saved class $classIndex for ${record.date} in session $sessionId → ${record.classesPresent}",
+    );
   }
 
   // load classes

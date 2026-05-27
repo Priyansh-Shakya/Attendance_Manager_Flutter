@@ -3,6 +3,7 @@ import 'package:attendance_manager/DataBase/model_class.dart';
 import 'package:attendance_manager/calendre.dart';
 import 'package:attendance_manager/dailogBoxes.dart';
 import 'package:attendance_manager/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,7 +102,7 @@ class _TestScreenState extends State<TestScreen> {
     setState(() {
       adjustment = value;
     });
-    print(adjustment);
+    debugPrint('Adjustment: $adjustment');
   }
 
   void _loadSessionData() {
@@ -211,7 +212,7 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Stats $widget.sessionId");
+    debugPrint("Stats $widget.sessionId");
     if (widget.sessionId == null || session == null || presentDay == null) {
       return const Scaffold(
         backgroundColor: Color(0xff242424),

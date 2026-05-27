@@ -50,9 +50,9 @@ class _StatisticsViewState extends State<StatisticsView> {
     setState(() {
       perDay = classes;
       isClassBased = based ?? widget.isClassBased;
-      print("mode for session: ${widget.sessionId} = $isClassBased");
+      debugPrint("mode for session: ${widget.sessionId} = $isClassBased");
       adjustment = saved;
-      print("Adjustment for session - ${widget.sessionId} = $adjustment");
+      debugPrint("Adjustment for session - ${widget.sessionId} = $adjustment");
       _loadingConfig = false;
     });
   }
@@ -202,7 +202,7 @@ class _StatisticsViewState extends State<StatisticsView> {
           if (a.date.isAfter(today)) return false; // ignore future
           return a.isPresent && a.date.weekday <= session.activeDaysPerWeek;
         }).length;
-        print("Present days: $presentDaysCount");
+        debugPrint("Present days: $presentDaysCount");
 
         int absentDaysCount = 0;
         DateTime current = DateTime(
@@ -289,8 +289,8 @@ class _StatisticsViewState extends State<StatisticsView> {
                 current = current.add(const Duration(days: 1));
               }
 
-              print("Present classes: $presentClasses");
-              print("Absent classes raw: $absentClassesRaw");
+              debugPrint("Present classes: $presentClasses");
+              debugPrint("Absent classes raw: $absentClassesRaw");
 
               // apply adjustment on absents safely
               final adjustedAbsent = (absentClassesRaw - adjustment * perDay!)

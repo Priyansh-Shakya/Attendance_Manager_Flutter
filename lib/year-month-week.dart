@@ -1,4 +1,5 @@
 import 'package:attendance_manager/DataBase/model_class.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'utils.dart';
 import 'DataBase/IoFunctions.dart';
@@ -142,31 +143,29 @@ class _WeekCardState extends State<WeekCard> {
                             value: isChecked,
                             checkColor: const Color(0xFF1DE9B6),
                             activeColor: const Color(0xFF1DE9B6),
-                            fillColor: WidgetStateProperty.resolveWith(
-                              (states) {
-                                if (states.contains(WidgetState.disabled)) {
-                                  return Colors.white10;
-                                }
-                                if (states.contains(WidgetState.selected)) {
-                                  return const Color(0xFF1DE9B6);
-                                }
-                                return const Color(0xFF1A2332);
-                              },
-                            ),
-                            side: WidgetStateBorderSide.resolveWith(
-                              (states) {
-                                if (states.contains(WidgetState.selected)) {
-                                  return const BorderSide(
-                                    color: Color(0xFF1DE9B6),
-                                    width: 2,
-                                  );
-                                }
+                            fillColor: WidgetStateProperty.resolveWith((
+                              states,
+                            ) {
+                              if (states.contains(WidgetState.disabled)) {
+                                return Colors.white10;
+                              }
+                              if (states.contains(WidgetState.selected)) {
+                                return const Color(0xFF1DE9B6);
+                              }
+                              return const Color(0xFF1A2332);
+                            }),
+                            side: WidgetStateBorderSide.resolveWith((states) {
+                              if (states.contains(WidgetState.selected)) {
                                 return const BorderSide(
-                                  color: Color(0xFF324558),
-                                  width: 1.5,
+                                  color: Color(0xFF1DE9B6),
+                                  width: 2,
                                 );
-                              },
-                            ),
+                              }
+                              return const BorderSide(
+                                color: Color(0xFF324558),
+                                width: 1.5,
+                              );
+                            }),
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             visualDensity: const VisualDensity(
@@ -439,7 +438,7 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                             );
                           }
 
-                          print("All deselected");
+                          debugPrint("All deselected");
                         } else {
                           // Select all
                           setState(() {
@@ -458,7 +457,7 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                             );
                           }
 
-                          print("All selected");
+                          debugPrint("All selected");
                         }
                       },
                       onPressed: () {
@@ -482,7 +481,7 @@ class _DailyClassWidgetState extends State<DailyClassWidget> {
                           totalClasses,
                         );
 
-                        print("Tapped");
+                        debugPrint("Tapped");
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF161B2A),

@@ -3,9 +3,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
-        android:label="attendancemanager"
+        android:label="Attendance Manager"
         android:name="${applicationName}"
-        android:icon="@mipmap/launhcher_icon">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -128,7 +128,7 @@ class _CalenderViewState extends State<CalenderView> {
 
   @override
   Widget build(BuildContext context) {
-    print("Calendar $widget.sessionId");
+    debugPrint("Calendar $widget.sessionId");
     if (widget.sessionID == null) {
       setState(() {
         _isClassBased = false;

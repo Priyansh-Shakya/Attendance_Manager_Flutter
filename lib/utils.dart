@@ -126,25 +126,25 @@ class Vibration {
   // Checkbox toggle , app bar iconButtons
   static void checkboxToggle() {
     HapticFeedback.selectionClick();
-    print("small vibration");
+    debugPrint("small vibration");
   }
 
   // Individual class button
   static void buttonPress() {
     HapticFeedback.mediumImpact();
-    print("medium vibration");
+    debugPrint("medium vibration");
   }
 
   // Select all classes
   static void selectAll() {
     HapticFeedback.heavyImpact();
-    print("heavy vibration");
+    debugPrint("heavy vibration");
   }
 
   // Snackbar
   static void snackbar() {
     HapticFeedback.lightImpact();
-    print("snacker bar vibration");
+    debugPrint("snacker bar vibration");
   }
 
   // Long press or generic

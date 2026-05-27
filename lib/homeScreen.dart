@@ -4,7 +4,6 @@ import 'package:attendance_manager/Date-Month-Input/askingInput.dart';
 import 'package:attendance_manager/settingsNnotifications/settings.dart';
 import 'package:attendance_manager/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (savedId != null) {
       widget.onSessionSelected(savedId);
     }
-    print("ID: $selectedSessionID");
+    debugPrint("ID: $selectedSessionID");
   }
 
   String formatDate(DateTime date) {
