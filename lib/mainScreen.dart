@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
       setState(() {
         sessionSelectedID = id;
 
-        print(sessionSelectedID);
+        debugPrint("$sessionSelectedID");
 
         isClassBased = classMode;
       });
@@ -53,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
         onSessionSelected: (id) {
           setState(() {
             sessionSelectedID = id;
-            print(sessionSelectedID);
+            debugPrint("$sessionSelectedID");
           });
           IoFunctions.saveSelectedSession(id);
         },

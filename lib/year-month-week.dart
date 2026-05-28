@@ -1,9 +1,9 @@
 import 'package:attendance_manager/DataBase/model_class.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'utils.dart';
-import 'DataBase/IoFunctions.dart';
 import 'package:hive/hive.dart';
+
+import 'DataBase/IoFunctions.dart';
+import 'utils.dart';
 
 class WeekCard extends StatefulWidget {
   final int weekNumber;
@@ -172,7 +172,10 @@ class _WeekCardState extends State<WeekCard> {
                               horizontal: -2,
                               vertical: -2,
                             ),
-                            onChanged: (!widget.showFuture && isFuture)
+                            onChanged:
+                                (!widget.showFuture &&
+                                    !widget.planningMode &&
+                                    isFuture)
                                 ? null
                                 : (bool? value) {
                                     final newValue = value ?? false;

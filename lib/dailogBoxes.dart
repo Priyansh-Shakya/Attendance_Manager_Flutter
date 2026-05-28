@@ -15,20 +15,28 @@ Future<void> showCustomDialog(
     showDialog(
       context: context,
       builder: ((_) => AlertDialog(
-            title: Text(title, textAlign: TextAlign.center),
-            content: customContent ??
-                Text(
-                  content ?? "",
-                  style: const TextStyle(fontSize: 15),
-                ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Ok"))
-            ],
-          )),
+        scrollable: true,
+        title: Text(title, textAlign: TextAlign.center),
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.5,
+            maxWidth: MediaQuery.of(context).size.width * 0.85,
+          ),
+          child: SingleChildScrollView(
+            child:
+                customContent ??
+                Text(content ?? "", style: const TextStyle(fontSize: 15)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Ok"),
+          ),
+        ],
+      )),
     );
     await prefs.setBool(screenNumber, true);
   }
@@ -42,11 +50,7 @@ void allClassesDailoge(BuildContext context, String title, String message) {
       return AlertDialog(
         title: Text(title),
         content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(message),
-            ],
-          ),
+          child: ListBody(children: <Widget>[Text(message)]),
         ),
         actions: <Widget>[
           TextButton(

@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# sigining related
+/android/key.properties
+/android/attendance-manager.jks

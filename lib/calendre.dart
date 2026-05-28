@@ -167,7 +167,7 @@ class _CalenderViewState extends State<CalenderView> {
           final today = DateTime.now();
 
           final weeksToShow = month.weeks.map((week) {
-            final daysToShow = widget.showFuture
+            final daysToShow = (widget.showFuture || widget.planningMode)
                 ? week.days
                 : week.days
                       .where(

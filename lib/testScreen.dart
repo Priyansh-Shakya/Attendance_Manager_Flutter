@@ -3,7 +3,6 @@ import 'package:attendance_manager/DataBase/model_class.dart';
 import 'package:attendance_manager/calendre.dart';
 import 'package:attendance_manager/dailogBoxes.dart';
 import 'package:attendance_manager/utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -138,11 +137,15 @@ class _TestScreenState extends State<TestScreen> {
             )
             .toList();
 
-        // ✅ Default present day = today or sessionEnd (whichever is earlier)
+        // ✅ Default present day = today if within session bounds,
+        // otherwise clamp to session bounds so future date picking works correctly.
         final today = DateTime.now();
-        presentDay = today.isAfter(session!.sessionEnd)
+        final todayDate = DateTime(today.year, today.month, today.day);
+        presentDay = todayDate.isBefore(session!.sessionStart)
+            ? session!.sessionStart
+            : todayDate.isAfter(session!.sessionEnd)
             ? session!.sessionEnd
-            : today;
+            : todayDate;
       } else {
         tempAttendance = [];
         originalAttendance = [];
@@ -191,6 +194,7 @@ class _TestScreenState extends State<TestScreen> {
             ),
           )
           .toList();
+      presentDay = DateTime.now();
     });
   }
 
