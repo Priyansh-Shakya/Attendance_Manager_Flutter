@@ -1,4 +1,4 @@
-package com.example.attendance_manager
+package com.drdwarfstudios.attendance_manager
 
 import io.flutter.embedding.android.FlutterActivity
 
